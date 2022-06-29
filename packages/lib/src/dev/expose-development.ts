@@ -2,17 +2,25 @@ import { parseExposeOptions } from '../utils'
 import { parsedOptions } from '../public'
 import type { VitePluginFederationOptions } from 'types'
 import type { PluginHooks } from '../../types/pluginHooks'
-import type { ViteDevServer } from '../../types/viteDevServer'
 
 export function devExposePlugin(
   options: VitePluginFederationOptions
 ): PluginHooks {
-  parsedOptions.devExpose = parseExposeOptions(options)
+  let myOptions = parseExposeOptions(options)
+  parsedOptions.devExpose = myOptions
+
+  console.log(myOptions)
 
   return {
     name: 'originjs:expose-development',
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    configureServer(server: ViteDevServer) {}
+    configureServer(server) {
+      return () => {
+        server.middlewares.use('/remoteEntry.js', (req, res, next) => {
+          res.end('okay doneeeee')
+          next()
+        })
+      }
+    }
   }
 }

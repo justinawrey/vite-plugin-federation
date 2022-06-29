@@ -3,7 +3,8 @@ import type {
   Plugin,
   UserConfig,
   ViteDevServer,
-  ResolvedConfig
+  ResolvedConfig,
+  ServerHook
 } from 'vite'
 import virtual from '@rollup/plugin-virtual'
 import { prodRemotePlugin } from './prod/remote-production'
@@ -101,8 +102,14 @@ export default function federation(
       builderInfo.assetsDir = config?.build?.assetsDir ?? 'assets'
     },
     configureServer(server: ViteDevServer) {
+      const cbs: ReturnType<ServerHook>[] = []
+
       for (const pluginHook of pluginList) {
-        pluginHook.configureServer?.call(this, server)
+        cbs.push(pluginHook.configureServer?.call(this, server))
+      }
+
+      return () => {
+        cbs.forEach((cb) => typeof cb === 'function' && cb())
       }
     },
     configResolved(config: ResolvedConfig) {

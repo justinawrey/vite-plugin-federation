@@ -20,7 +20,12 @@ export function prodExposePlugin(
   options: VitePluginFederationOptions
 ): PluginHooks {
   let moduleMap = ''
-  parsedOptions.prodExpose = parseExposeOptions(options)
+
+  const prodExposeOptions = parseExposeOptions(options)
+  console.log('prod expose options', prodExposeOptions)
+
+  parsedOptions.prodExpose = prodExposeOptions
+
   // exposes module
   for (const item of parsedOptions.prodExpose) {
     const moduleName = getModuleMarker(`\${${item[0]}}`, SHARED)
@@ -32,6 +37,8 @@ export function prodExposePlugin(
       return __federation_import('\${__federation_expose_${item[0]}}').then(module =>Object.keys(module).every(item => exportSet.has(item)) ? () => module.default : () => module)
     },`
   }
+
+  console.log('moduleMap', moduleMap)
 
   let remoteEntryChunk
 

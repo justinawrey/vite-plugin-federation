@@ -9,6 +9,7 @@ const count = ref(0)
 </script>
 
 <template>
+lotsa text
   <h1>{{ msg }}</h1>
 
   <p>
@@ -23,7 +24,7 @@ const count = ref(0)
       Vite Documentation
     </a>
     |
-    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Documentation</a>
+    <a href="https://v3.vuejs.org/" target="_blank">Vue 3 Doooooohhocumentation</a>
   </p>
 
   <button type="button" @click="count++">count is: {{ count }}</button>
